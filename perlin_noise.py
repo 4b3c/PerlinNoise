@@ -1,10 +1,10 @@
-import random, pygame
+import random, pygame, math
 
 # random.seed(89243598)
-y_scale = 10
+y_scale = 2
 
 def smooth(x):
-	return (6 * (x**5)) - (15 * (x**4)) + (10 * (x**3))
+	return (6 * (x**5.1)) - (15 * (x**4)) + (10 * (x**3)) + (math.sin(math.pi * 7 * x) / 30)
 
 # def mountain(x)
 
