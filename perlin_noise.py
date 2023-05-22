@@ -75,16 +75,16 @@ class perlin_noise_2d():
 		end_xy = self.points[whole_y + 1][whole_x + 1]
 
 		if (side <= 1):
-			interp_x = origin + smooth(side) * (end_x - origin)
-			interp_y = origin + smooth(side) * (end_y - origin)
+			interp_x = end_x + smooth(side) * (origin - end_x)
+			interp_y = end_y + smooth(side) * (origin - end_y)
 
 			return interp_x + (smooth(math.sqrt(2 * (y_deci**2))) / 2) * (interp_y - interp_x)
 
 		else:
 			side = (1 - x_deci) + (1 - y_deci)
 
-			interp_x = end_y + smooth(1 - side) * (end_xy - end_y)
-			interp_y = end_x + smooth(1 - side) * (end_xy - end_x)
+			interp_x = end_xy + smooth(1 - side) * (end_y - end_xy)
+			interp_y = end_xy + smooth(1 - side) * (end_x - end_xy)
 
 			return interp_x + (smooth(math.sqrt(2 * (1 - y_deci**2))) / 2) * (interp_y - interp_x)
 
