@@ -44,9 +44,6 @@ class perlin_noise_2d():
 		x_deci = x - whole_x
 		y_deci = y - whole_y
 
-		# print("wholw", whole_y, whole_x)
-		# print(self.points[0][0])
-
 		origin = self.points[whole_y][whole_x]
 		end_x = self.points[whole_y][whole_x + 1]
 		end_y = self.points[whole_y + 1][whole_x]
@@ -55,13 +52,6 @@ class perlin_noise_2d():
 		interp_x1 = origin + smooth(x_deci) * (end_x - origin)
 		interp_x2 = end_y + smooth(x_deci) * (end_xy - end_y)
 		interp_y = interp_x1 + smooth(y_deci) * (interp_x2 - interp_x1)
-
-		# print(x_deci)
-		# print(smooth(x_deci))
-		# print(end_xy - end_y)
-		# print(smooth(x_deci) * (end_xy - end_y))
-		# print(interp_x2)
-		# print(origin)
 
 		interp_y1 = origin + smooth(y_deci) * (end_y - origin)
 		interp_y2 = end_x + smooth(y_deci) * (end_xy - end_x)
@@ -95,10 +85,6 @@ class perlin_noise_2d():
 
 pn = perlin_noise_2d(85, 45)
 pn.generate_noise()
-
-# print(pn.noise(0.995, 0.995))
-# print(pn.points)
-
 
 pygame.init()
 window = pygame.display.set_mode((1800, 900))
