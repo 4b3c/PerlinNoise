@@ -35,7 +35,6 @@ class perlin_noise_2d():
 		self.height = height + 1
 
 	def generate_noise(self):
-		# self.points = [[0.3, 1], [0, 0.5]]
 		self.points = []
 		for i in range(self.height):
 			row = [random.uniform(0, 1) for i in range(self.length)]
@@ -67,26 +66,35 @@ class perlin_noise_2d():
 		whole_y = int(y)
 		x_deci = x - whole_x
 		y_deci = y - whole_y
-		side = x_deci + y_deci
+		# x + y gives us the length of the non hypotenuse sides of a 45 degree triangle
+		tri_side = x_deci + y_deci
 
+		# get the heights of the top left and right, then bottom left and right corners
 		origin = self.points[whole_y][whole_x]
 		end_x = self.points[whole_y][whole_x + 1]
 		end_y = self.points[whole_y + 1][whole_x]
 		end_xy = self.points[whole_y + 1][whole_x + 1]
 
-		if (side <= 1):
-			interp_x = end_x + smooth(side) * (origin - end_x)
-			interp_y = end_y + smooth(side) * (origin - end_y)
+		# if tri_side is less than 1, the point is in the top left half of the cell
+		# which means we interpolate based on the top and left 1d interpolations
+		# also note this is done at the length of the triangle side so that
+		# when the diagonal interpolation is done it will pass through the point
+		if (tri_side <= 1):
+			interp_x = origin + smooth(tri_side) * (end_x - origin)
+			interp_y = origin + smooth(tri_side) * (end_y - origin)
 
-			return interp_x + (smooth(math.sqrt(2 * (y_deci**2))) / 2) * (interp_y - interp_x)
+			# lastly interpolate between the two interpolated sides using a diagonal interpolation
+			return interp_x + (smooth(math.sqrt(2 * (y_deci**2))) / math.sqrt(tri_side)) * (interp_y - interp_x)
 
+		# if tri_side is greater than 1, we do the same thing but from the bottom right triangle
+		# so intead of the top and left, we use the bottom and right sides, then interpolate between them as before
 		else:
-			side = (1 - x_deci) + (1 - y_deci)
+			tri_side = (1 - x_deci) + (1 - y_deci)
 
-			interp_x = end_xy + smooth(1 - side) * (end_y - end_xy)
-			interp_y = end_xy + smooth(1 - side) * (end_x - end_xy)
+			interp_x = end_xy + smooth(1 - tri_side) * (end_y - end_xy)
+			interp_y = end_xy + smooth(1 - tri_side) * (end_x - end_xy)
 
-			return interp_x + (smooth(math.sqrt(2 * (1 - y_deci**2))) / 2) * (interp_y - interp_x)
+			return interp_y + (smooth(math.sqrt(2 * (1 - y_deci**2))) / math.sqrt(tri_side)) * (interp_x - interp_y)
 
 
 
@@ -115,21 +123,21 @@ class perlin_noise_2d():
 pn = perlin_noise_2d(4, 2)
 pn.generate_noise()
 
-print(pn.noise_triangle(0.5, 0.99))
-print(pn.noise_triangle(0.5, 1.01))
+print(pn.noise_triangle(0.49, 0.49))
+print(pn.noise_triangle(0.51, 0.51))
 print()
 
 pygame.init()
 window = pygame.display.set_mode((1800, 900))
 
-for x in range(0, 400, 3):
-	for y in range(0, 200, 3):
+for x in range(0, 400, 8):
+	for y in range(0, 200, 8):
 		try:
 			color = pn.noise_triangle(x / 100, y / 100) * 255
 		except:
 			pass
-		for i in range(3):
-			for j in range(3):
+		for i in range(8):
+			for j in range(8):
 				try:
 					window.set_at((x + i + 50, y + j + 50), (color, color, color))
 				except:
