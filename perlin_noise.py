@@ -2,12 +2,10 @@ import random, pygame, math, time
 
 # random.seed(89243598)
 # https://www.desmos.com/calculator/fb4sly23hg
-
-y_scale = 2
+sqrt2 = math.sqrt(2)
 
 def smooth(x):
-	return (6 * (x**5)) - (15 * (x**4)) + (10 * (x**3))
-	 # + (math.sin(math.pi * 7 * x) / 30)
+	return (6 * (x**5)) - (15 * (x**4)) + (10 * (x**3)) + (math.sin(math.pi * 10 * x) / 30)
 
 
 #one dimension
@@ -77,7 +75,10 @@ class perlin_noise_2d():
 			interp_x = origin + smooth(tri_side) * (end_x - origin)
 			interp_y = origin + smooth(tri_side) * (end_y - origin)
 
-			return interp_y + (smooth(math.sqrt(2 * (x_deci**2)) / math.sqrt(2 * (tri_side**2)))) * (interp_x - interp_y)
+			# return interp_y + smooth(math.sqrt(2 * (x_deci**2)) / math.sqrt(2 * (tri_side**2))) * (interp_x - interp_y)
+			# simply simplified confusingly
+			return interp_y + smooth((sqrt2 * x_deci) / (sqrt2 * tri_side)) * (interp_x - interp_y)
+
 
 		else:
 			tri_side = (1 - x_deci) + (1 - y_deci)
@@ -85,10 +86,13 @@ class perlin_noise_2d():
 			interp_x = end_xy + smooth(tri_side) * (end_y - end_xy)
 			interp_y = end_xy + smooth(tri_side) * (end_x - end_xy)
 
-			return interp_y + smooth(math.sqrt(2 * (1 - x_deci)**2) / math.sqrt(2 * (tri_side**2))) * (interp_x - interp_y)
+			# return interp_y + smooth(math.sqrt(2 * (1 - x_deci)**2) / math.sqrt(2 * (tri_side**2))) * (interp_x - interp_y)
+			# simply simplified confusingly
+			return interp_y + smooth((sqrt2 * (1 - x_deci)) / (sqrt2 * tri_side)) * (interp_x - interp_y)
 
 
 
+y_scale = 2
 
 # pn = perlin_noise_1d(10)
 # pn.generate_noise()
@@ -112,31 +116,41 @@ class perlin_noise_2d():
 
 
 start = time.time()
-map_size = [8, 4]
+map_size = [12, 6]
 
 pn = perlin_noise_2d(map_size[0], map_size[1])
 pn.generate_noise()
 
-resolution = 15
-cell_size = 200
+resolution = 4
+cell_size = 150
 
 pygame.init()
 window = pygame.display.set_mode((1800, 900))
 
 for x in range(0, map_size[0] * cell_size, resolution):
 	for y in range(0, map_size[1] * cell_size, resolution):
-		try:
-			color = pn.noise_triangle(x / cell_size, y / cell_size) * 255
-		except:
-			pass
-		for i in range(resolution):
-			for j in range(resolution):
-				try:
-					window.set_at((x + i + 50, y + j + 50), (255 - color, color, color))
-				except:
-					print(x / 100, y / 100)
+		tri = pn.noise_triangle(x / cell_size, y / cell_size)
+		sqr = pn.noise_square(x / cell_size, y / cell_size)
+		mtnx = (-abs(x-900) / (0.24 * 1800)) + 0.18
+		mnty = (-abs(y-450) / (0.24 * 900)) + 0.18
+		height = max(0, min(1, (((tri + sqr) / 1.5) + ((mtnx + mnty) / 2))))
 
-		pygame.display.update()
+		if height < 0.2:
+			color = (27, 149, 224)
+		elif height < 0.3:
+			color = (205, 170, 109)
+		elif height < 0.6:
+			color = (124, 252, 0)
+		elif height < 0.86:
+			color = (1, 68, 33)
+		elif height < 0.98:
+			color = (122, 114, 113)
+		else:
+			color = (255, 255, 255)
+
+		pygame.draw.rect(window, (color), (x, y, resolution, resolution))
+
+	pygame.display.flip()
 
 print("Elapsed time:", time.time() - start)
 
