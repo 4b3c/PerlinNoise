@@ -1,4 +1,4 @@
-import random, pygame, math
+import random, pygame, math, time
 
 # random.seed(89243598)
 # https://www.desmos.com/calculator/fb4sly23hg
@@ -73,7 +73,7 @@ class perlin_noise_2d():
 		if tri_side == 0:
 			return origin
 
-		if (tri_side <= 1):
+		elif (tri_side <= 1):
 			interp_x = origin + smooth(tri_side) * (end_x - origin)
 			interp_y = origin + smooth(tri_side) * (end_y - origin)
 
@@ -111,26 +111,34 @@ class perlin_noise_2d():
 
 
 
-pn = perlin_noise_2d(6, 3)
+start = time.time()
+map_size = [8, 4]
+
+pn = perlin_noise_2d(map_size[0], map_size[1])
 pn.generate_noise()
+
+resolution = 15
+cell_size = 200
 
 pygame.init()
 window = pygame.display.set_mode((1800, 900))
 
-for x in range(0, 1600, 10):
-	for y in range(0, 800, 10):
+for x in range(0, map_size[0] * cell_size, resolution):
+	for y in range(0, map_size[1] * cell_size, resolution):
 		try:
-			color = pn.noise_triangle(x / 300, y / 300) * 255
+			color = pn.noise_triangle(x / cell_size, y / cell_size) * 255
 		except:
 			pass
-		for i in range(10):
-			for j in range(10):
+		for i in range(resolution):
+			for j in range(resolution):
 				try:
 					window.set_at((x + i + 50, y + j + 50), (255 - color, color, color))
 				except:
 					print(x / 100, y / 100)
 
 		pygame.display.update()
+
+print("Elapsed time:", time.time() - start)
 
 while True:
 	for event in pygame.event.get():
