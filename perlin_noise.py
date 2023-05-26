@@ -1,6 +1,8 @@
 import random, pygame, math, time
 
-# random.seed(89243598)
+# random.seed(154821) cool
+# random.seed(892435) C
+# random.seed(9075) lake island
 # https://www.desmos.com/calculator/fb4sly23hg
 sqrt2 = math.sqrt(2)
 
