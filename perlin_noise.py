@@ -7,6 +7,18 @@ sqrt2 = math.sqrt(2)
 def smooth(x):
 	return (6 * (x**5)) - (15 * (x**4)) + (10 * (x**3)) + (math.sin(math.pi * 10 * x) / 30)
 
+def get_border_indices(array):
+	rows = len(array)
+	columns = len(array[0])
+
+	border_indices = []
+
+	border_indices.extend([(0, col) for col in range(columns)])
+	border_indices.extend([(rows - 1, col) for col in range(columns)])
+	border_indices.extend([(row, 0) for row in range(1, rows - 1)])
+	border_indices.extend([(row, columns - 1) for row in range(1, rows - 1)])
+
+	return border_indices
 
 #one dimension
 class perlin_noise_1d():
@@ -34,6 +46,8 @@ class perlin_noise_2d():
 
 	def generate_noise(self):
 		self.points = [[random.uniform(0, 1) for i in range(self.length)] for j in range(self.height)]
+		for border in get_border_indices(self.points):
+			if self.points[border[0]][border[1]] > 0.7: self.points[border[0]][border[1]] -= 0.3
 
 	def noise_square(self, x, y):
 		whole_x = int(x)
