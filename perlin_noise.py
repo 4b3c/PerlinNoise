@@ -14,7 +14,6 @@ def get_border_indices(array):
 	columns = len(array[0])
 
 	border_indices = []
-
 	border_indices.extend([(0, col) for col in range(columns)])
 	border_indices.extend([(rows - 1, col) for col in range(columns)])
 	border_indices.extend([(row, 0) for row in range(1, rows - 1)])
