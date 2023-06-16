@@ -107,7 +107,7 @@ class perlin_noise_2d():
 
 
 
-y_scale = 2
+# y_scale = 2
 
 # pn = perlin_noise_1d(10)
 # pn.generate_noise()
@@ -130,47 +130,47 @@ y_scale = 2
 
 
 
-start = time.time()
-map_size = [12, 6]
+# start = time.time()
+# map_size = [12, 6]
 
-pn = perlin_noise_2d(map_size[0], map_size[1])
-pn.generate_noise()
+# pn = perlin_noise_2d(map_size[0], map_size[1])
+# pn.generate_noise()
 
-resolution = 4
-cell_size = 150
+# resolution = 4
+# cell_size = 150
 
-pygame.init()
-window = pygame.display.set_mode((1800, 900))
+# pygame.init()
+# window = pygame.display.set_mode((1800, 900))
 
-for x in range(0, map_size[0] * cell_size, resolution):
-	for y in range(0, map_size[1] * cell_size, resolution):
-		tri = pn.noise_triangle(x / cell_size, y / cell_size)
-		sqr = pn.noise_square(x / cell_size, y / cell_size)
-		mtnx = (-abs(x-900) / (0.24 * 1800)) + 0.18
-		mnty = (-abs(y-450) / (0.24 * 900)) + 0.18
-		height = max(0, min(1, (((tri + sqr) / 1.5) + ((mtnx + mnty) / 2))))
+# for x in range(0, map_size[0] * cell_size, resolution):
+# 	for y in range(0, map_size[1] * cell_size, resolution):
+# 		tri = pn.noise_triangle(x / cell_size, y / cell_size)
+# 		sqr = pn.noise_square(x / cell_size, y / cell_size)
+# 		mtnx = (-abs(x-900) / (0.24 * 1800)) + 0.18
+# 		mnty = (-abs(y-450) / (0.24 * 900)) + 0.18
+# 		height = max(0, min(1, (((tri + sqr) / 1.5) + ((mtnx + mnty) / 2))))
 
-		if height < 0.2:
-			color = (27, 149, 224)
-		elif height < 0.3:
-			color = (205, 170, 109)
-		elif height < 0.6:
-			color = (124, 252, 0)
-		elif height < 0.86:
-			color = (1, 68, 33)
-		elif height < 0.98:
-			color = (122, 114, 113)
-		else:
-			color = (255, 255, 255)
+# 		if height < 0.2:
+# 			color = (27, 149, 224)
+# 		elif height < 0.3:
+# 			color = (205, 170, 109)
+# 		elif height < 0.6:
+# 			color = (124, 252, 0)
+# 		elif height < 0.86:
+# 			color = (1, 68, 33)
+# 		elif height < 0.98:
+# 			color = (122, 114, 113)
+# 		else:
+# 			color = (255, 255, 255)
 
-		pygame.draw.rect(window, (color), (x, y, resolution, resolution))
+# 		pygame.draw.rect(window, (color), (x, y, resolution, resolution))
 
-	pygame.display.flip()
+# 	pygame.display.flip()
 
-print("Elapsed time:", time.time() - start)
+# print("Elapsed time:", time.time() - start)
 
-while True:
-	for event in pygame.event.get():
-		if event.type == pygame.QUIT:
-			quit()
+# while True:
+# 	for event in pygame.event.get():
+# 		if event.type == pygame.QUIT:
+# 			quit()
 
